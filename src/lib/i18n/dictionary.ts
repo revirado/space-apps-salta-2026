@@ -145,7 +145,7 @@ const es: Dictionary = {
   },
   hero: {
     eyebrow: "NASA SPACE APPS · SALTA · ARGENTINA",
-    title: "NASA SPACE APPS\nSALTA",
+    title: "NASA SPACE APPS\nSALTA 2026",
     locationLine: "Salta, Argentina",
     dateLine: "14 — 15 Noviembre 2026",
     proposition: "El hackathon global de NASA llega a Salta. Construí soluciones reales con datos abiertos del espacio.",
@@ -299,7 +299,7 @@ const en: Dictionary = {
   },
   hero: {
     eyebrow: "NASA SPACE APPS · SALTA · ARGENTINA",
-    title: "NASA SPACE APPS\nSALTA",
+    title: "NASA SPACE APPS\nSALTA 2026",
     locationLine: "Salta, Argentina",
     dateLine: "November 14 — 15, 2026",
     proposition: "NASA's global hackathon lands in Salta. Build real solutions using open space data.",
