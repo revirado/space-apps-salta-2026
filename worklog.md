@@ -184,3 +184,42 @@ Stage Summary:
   - Mobile 390×844: el botón "SUMATE" del header está oculto por `hidden sm:inline-flex` (aparece recién en ≥640px). El usuario accede al "Sumate" vía el menú hamburguesa → click → scrollY=11798, finalCtaTop=0, inView=true ✅
 - Console: 0 errores de runtime (solo warnings de THREE.Clock deprecado, ya existentes).
 - Artefactos: solo modificación de `src/components/site/Navbar.tsx`.
+
+---
+Task ID: 5
+Agent: main (super-z)
+Task: Implementar un preloader simple y liviano que tape toda la pantalla hasta que la página termine de cargar (especialmente el Hero con el canvas Three.js), con el logo small del proyecto + un efecto simple, bloqueando el scroll del usuario durante la transición.
+
+Work Log:
+- Creado `src/components/site/Preloader.tsx`:
+  - Overlay full-screen `fixed inset-0 z-[100]` con `bg-deep-blue` para tapar todo el contenido.
+  - Logo oficial `space-apps-white-small.svg` (64px) centrado con `animate-pulse` suave.
+  - Dos anillos orbitales CSS-only: uno de 128px con `preloader-spin 2.4s linear infinite` (amarillo neon arriba + azul abajo) y otro de 168px con `preloader-spin-reverse 4s linear infinite` (opacidad 0.5).
+  - Radial wash sutil sobre el fondo deep blue para que no sea plano.
+  - Texto status "NASA Space Apps · Salta 2026" abajo en font-mono-code tracking amplio.
+  - Fade-out con framer-motion AnimatePresence (duration 0.6s ease-in-out).
+- Lógica de finalización:
+  - Estado `done` controla visibilidad del overlay.
+  - Effect dedicado lockea el scroll mientras `done=false`: `document.body.style.overflow = 'hidden'`, `document.body.style.touchAction = 'none'`. Cleanup restaura los valores previos cuando `done` cambia a true.
+  - Effect dedicado dispara el finish: si `readyState === 'complete'` schedulea inmediatamente; si no, espera el evento `load` con fallback a `setTimeout(1200ms)`.
+  - Minimum visible time de 800ms para que el preloader no "parpadee" en conexiones rápidas.
+  - Safety net a 3500ms para nunca quedar atrapado si el evento `load` no dispara.
+- `src/app/globals.css`:
+  - Agregados keyframes `preloader-spin` (360deg) y `preloader-spin-reverse` (-360deg).
+  - Media query `prefers-reduced-motion` extendida para desactivar `.preloader-ring` (sin giro, solo fade out).
+- `src/app/page.tsx`: agregado `<Preloader />` como primer hijo del wrapper raíz, antes del Navbar.
+
+Stage Summary:
+- ESLint: 0 errores, 0 warnings.
+- Agent Browser verification:
+  - 300ms después del reload: overlayCount=1, opacity=1, bodyOverflow="hidden" (preloader visible, scroll bloqueado) ✅
+  - 1.3s después del reload: overlayCount=0, opacity=null, bodyOverflow="" (preloader desaparecido, scroll desbloqueado) ✅
+  - Durante el preloader: `body.overflow=hidden, body.touchAction=none` confirmado con `getComputedStyle`.
+  - Después del preloader: `body.overflow=''` (restaurado), usuario puede scrollear libremente.
+  - VLM confirmó: "The preloader is visible. It features a central NASA-style logo (a circle with a 'V' shape) with spinning blue and yellow arcs around it, set against a dark blue background."
+  - VLM confirmó hero visible después: "The preloader is gone, and the NASA Space Apps Salta 2026 hero section is fully visible, displaying the main title, the event dates."
+  - 0 errores de consola nuevos (solo el warning preexistente THREE.Clock deprecado).
+- Artefactos producidos:
+  - Nuevo: `src/components/site/Preloader.tsx`.
+  - Modificaciones: `src/app/globals.css` (keyframes + reduced-motion), `src/app/page.tsx` (incluye `<Preloader />`).
+  - Screenshots: `preview-preloader-t0.png`, `preview-preloader-t2.png`, `preview-preloader-t5.png`, `preview-preloader-visible.png`.

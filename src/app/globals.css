@@ -158,6 +158,14 @@
   }
   .orbit-pulse { animation: orbit-pulse 4s ease-in-out infinite; }
 
+  /* Preloader spinners */
+  @keyframes preloader-spin {
+    to { transform: rotate(360deg); }
+  }
+  @keyframes preloader-spin-reverse {
+    to { transform: rotate(-360deg); }
+  }
+
   /* Reveal on enter */
   .reveal-in {
     opacity: 0;
@@ -179,7 +187,8 @@
     transition-duration: 0.001ms !important;
   }
   .scroll-cue::after,
-  .orbit-pulse { animation: none !important; }
+  .orbit-pulse,
+  .preloader-ring { animation: none !important; }
   .reveal-in { opacity: 1; transform: none; }
 }
 
