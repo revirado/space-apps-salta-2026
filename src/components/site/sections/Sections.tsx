@@ -26,10 +26,13 @@ import {
   CheckCircle2,
   Circle,
   Instagram,
+  Mail,
   ArrowRight,
 } from "lucide-react";
 
 const REGISTRATION_URL = "https://www.spaceappschallenge.org/2026/local-events/salta/";
+const INSTAGRAM_URL = "https://www.instagram.com/spaceapps.salta/";
+const CONTACT_EMAIL = "ariellamas.tech@gmail.com";
 
 /* ================================================================== */
 /* 01 — What is Space Apps                                            */
@@ -749,16 +752,42 @@ export function FinalCTA() {
           <CTAButton
             variant="outline"
             onClick={() =>
-              window.open(
-                "https://www.instagram.com/spaceapps.salta/",
-                "_blank",
-                "noopener,noreferrer",
-              )
+              window.open(REGISTRATION_URL, "_blank", "noopener,noreferrer")
             }
           >
-            <Instagram className="w-4 h-4 mr-2 inline" />
             {t.finalCta.secondary}
+            <ArrowRight className="w-4 h-4 ml-2 inline" />
           </CTAButton>
+        </motion.div>
+
+        {/* Contact + social row */}
+        <motion.div
+          initial={{ opacity: 0, y: 18 }}
+          animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 18 }}
+          transition={{ duration: 0.7, ease: "easeOut", delay: 0.26 }}
+          className="mt-8 flex flex-wrap items-center justify-center gap-x-6 gap-y-3 text-sm text-muted-foreground"
+        >
+          <a
+            href={`mailto:${CONTACT_EMAIL}`}
+            className="inline-flex items-center gap-2 hover:text-foreground transition-colors"
+          >
+            <Mail className="w-4 h-4 text-blue-yonder" />
+            <span className="font-mono-code text-xs tracking-wider">
+              {CONTACT_EMAIL}
+            </span>
+          </a>
+          <span className="hidden sm:inline text-foreground/30">·</span>
+          <a
+            href={INSTAGRAM_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 hover:text-foreground transition-colors"
+          >
+            <Instagram className="w-4 h-4 text-blue-yonder" />
+            <span className="font-mono-code text-xs tracking-wider">
+              @spaceapps.salta
+            </span>
+          </a>
         </motion.div>
       </div>
     </section>

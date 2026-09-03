@@ -123,3 +123,64 @@ Stage Summary:
   - Modificaciones: `package.json`, `next.config.ts`, `src/app/globals.css`, `src/app/page.tsx`, `src/lib/i18n/dictionary.ts`, `src/components/site/Navbar.tsx`, `src/components/site/Hero.tsx`, `src/components/site/Footer.tsx`, `src/components/site/sections/Sections.tsx`.
   - Archivos borrados: `src/lib/db.ts`, `prisma/schema.prisma`, `.env` (carpetas `prisma/` y `db/` eliminadas).
   - Screenshots nuevos: `download/preview-mobile-menu-open.png`, `download/preview-mobile-hero-v2.png`, `download/preview-desktop-hero-v2.png`, `preview-footer-v2.png`, `preview-footer-v3.png`, `preview-hero-v3.png`.
+
+---
+Task ID: 3
+Agent: main (super-z)
+Task: 5 cambios finales solicitados por el usuario: (1) FinalCTA "Inscribite aquí" debe ir a link de inscripción, (2) Hero botón "Sumate al desafío" en color accent (amarillo neon), (3) Menú mobile "Sumate" debe hacer scroll a #final-cta, (4) Footer con Local Lead "Ariel Lamas" + "powered by ariellamas.tech", (5) Mail de contacto ariellamas.tech@gmail.com.
+
+Work Log:
+- `src/components/site/sections/Sections.tsx`:
+  - FinalCTA: el botón secundario "Inscribite aquí"/"Register here" ahora abre `REGISTRATION_URL` en nueva pestaña (antes abría Instagram).
+  - FinalCTA: agregada fila de contacto + social debajo de los CTAs — dos links inline con iconos: `mailto:ariellamas.tech@gmail.com` (Mail icon) y `https://www.instagram.com/spaceapps.salta/` (Instagram icon), separados por un dot.
+  - Constantes nuevas `INSTAGRAM_URL` y `CONTACT_EMAIL` definidas al top del archivo.
+  - Re-importado el icono `Mail` de lucide-react (había sido removido en el task 2).
+- `src/components/site/Hero.tsx`: CTA "Sumate al desafío" cambiado de `variant="primary"` (azul) a `variant="accent"` (amarillo neon) para coincidir con el color del "Sumate" del navbar.
+- `src/components/site/Navbar.tsx`: Botón "Sumate" del menú mobile cambiado — antes llamaba `goToRegistration()` (abría link externo), ahora hace `setOpen(false)` + `setTimeout(320ms)` + `document.getElementById("final-cta").scrollIntoView({behavior:"smooth"})`. El timeout espera que termine la animación de cierre del menú (280ms) antes de invocar el scroll, para que el smooth-scroll no se cancele por el layout shift.
+- `src/components/site/Footer.tsx`:
+  - Sección "Connect" ahora incluye dos chips en `flex-wrap`: Instagram `@spaceapps.salta` (ya existente) + nuevo chip `ariellamas.tech@gmail.com` con icono `Mail`.
+  - Nuevo bloque "Local Lead" debajo de los chips: chip con borde sutil, icono `UserCircle2` + label "LOCAL LEAD" (mono uppercase) + nombre `Ariel Lamas` en font-display bold.
+  - Bottom strip: el texto `madeBy` del i18n fue reemplazado por la constante `POWERED_BY = "powered by ariellamas.tech"` (sin link, como pidió el usuario). Mantenido el motif circular del logo Space Apps.
+  - Nuevas constantes: `CONTACT_EMAIL`, `LOCAL_LEAD`, `POWERED_BY`. Nuevo import: `Mail`, `UserCircle2` de lucide-react.
+
+Stage Summary:
+- ESLint: 0 errores, 0 warnings.
+- Agent Browser verification:
+  - Botón "Inscribite aquí" del FinalCTA: click → `window.location.href === "https://www.spaceappschallenge.org/2026/local-events/salta/"` ✅
+  - Botón "Sumate" del menú mobile: click → `scrollY=11798`, `finalCtaTop=0`, `inView=true` (scrolled suavemente a la sección 10 - Sumate) ✅
+  - Botón "Sumate al desafío" del Hero: ahora color accent (amarillo neon) — VLM confirmó "bright yellow/lime (neon yellow accent)" ✅
+  - Footer verificado con `JSON.stringify`:
+    - `hasArielLamas: true`
+    - `hasPoweredBy: true` ("powered by ariellamas.tech")
+    - `hasEmail: true` (ariellamas.tech@gmail.com)
+    - `hasInstagram: true` (@spaceapps.salta)
+  - VLM footer: confirmó "Local Lead badge with Ariel Lamas", "email chip with envelope icon", "Instagram chip with Instagram logo", "powered by ariellamas.tech visible at the bottom".
+  - Switch a inglés verificado: "JOIN THE CHALLENGE" + "REGISTER HERE" en FinalCTA, "Local Lead" + "Ariel Lamas" + "powered by ariellamas.tech" se mantienen (no se traducen, son nombres propios/creditos).
+  - Links externos final inventory:
+    - `https://www.spaceappschallenge.org/2026/local-events/salta/` (Hero CTA, Navbar CTA, FinalCTA primary, FinalCTA secondary "Inscribite aquí", footer "NASA Space Apps Challenge")
+    - `https://www.instagram.com/spaceapps.salta/` (footer Instagram chip, FinalCTA social row, Collaborators CTA)
+    - `mailto:ariellamas.tech@gmail.com` (footer Connect chip, FinalCTA contact row)
+- Artefactos producidos:
+  - Modificaciones: `src/components/site/sections/Sections.tsx`, `src/components/site/Hero.tsx`, `src/components/site/Navbar.tsx`, `src/components/site/Footer.tsx`.
+  - Screenshots nuevos: `preview-footer-v4.png`, `preview-footer-final.png`, `preview-footer-bottom.png`, `preview-hero-final.png`.
+
+---
+Task ID: 4
+Agent: main (super-z)
+Task: Cambiar el botón "Sumate/Join" del header (al lado del switcher de idioma) para que haga scroll a la sección "10 - Sumate" (#final-cta) en lugar de abrir el link externo de inscripción. Esto debe funcionar igual en desktop y mobile.
+
+Work Log:
+- `src/components/site/Navbar.tsx`:
+  - Reemplazada `goToRegistration` por `goToFinalCta(fromMobileMenu = false)`. Helper único que cierra el menú mobile (si procede del menú) + espera 320ms para que termine la animación de cierre del menú antes de invocar `scrollIntoView({behavior:"smooth"})` a `#final-cta`. Cuando viene del header directamente (desktop o tablet) no necesita el timeout.
+  - Botón "Sumate" del header (ref=e10, `hidden sm:inline-flex`): `onClick={goToRegistration}` → `onClick={() => goToFinalCta(false)}`.
+  - Botón "Sumate" del menú mobile (ref=e62, dentro del AnimatePresence): reemplazado el inline `setTimeout(320ms)` por `onClick={() => goToFinalCta(true)}` — reutiliza el mismo helper.
+  - Constante `REGISTRATION_URL` eliminada del Navbar (ya no se usa en este archivo).
+
+Stage Summary:
+- ESLint: 0 errores, 0 warnings.
+- Agent Browser verification en 3 viewports:
+  - Desktop 1440×900: click "SUMATE" header → scrollY=8800, finalCtaTop=0, inView=true ✅
+  - Tablet 768×1024: click "SUMATE" header → scrollY=9360, finalCtaTop=0, inView=true ✅
+  - Mobile 390×844: el botón "SUMATE" del header está oculto por `hidden sm:inline-flex` (aparece recién en ≥640px). El usuario accede al "Sumate" vía el menú hamburguesa → click → scrollY=11798, finalCtaTop=0, inView=true ✅
+- Console: 0 errores de runtime (solo warnings de THREE.Clock deprecado, ya existentes).
+- Artefactos: solo modificación de `src/components/site/Navbar.tsx`.

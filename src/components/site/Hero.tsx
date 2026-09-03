@@ -98,7 +98,7 @@ export function Hero() {
             className="mt-8 flex flex-col sm:flex-row gap-3 sm:gap-4"
           >
             <CTAButton
-              variant="primary"
+              variant="accent"
               glow
               onClick={() =>
                 window.open(REGISTRATION_URL, "_blank", "noopener,noreferrer")

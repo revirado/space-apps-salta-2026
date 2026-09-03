@@ -14,8 +14,6 @@ const NAV_LINKS = [
   { key: "faq", href: "#faq" },
 ] as const;
 
-const REGISTRATION_URL = "https://www.spaceappschallenge.org/2026/local-events/salta/";
-
 export function Navbar() {
   const { t, language, setLanguage, labels, languages } = useLanguage();
   const [scrolled, setScrolled] = useState(false);
@@ -37,8 +35,23 @@ export function Navbar() {
     return () => window.removeEventListener("resize", onResize);
   }, []);
 
-  const goToRegistration = () => {
-    window.open(REGISTRATION_URL, "_blank", "noopener,noreferrer");
+  // CTA "Sumate" scrolls to the final CTA section (same on desktop and mobile).
+  // When triggered from the mobile menu, we first close the menu and wait for
+  // the close animation (280ms) before scrolling so the smooth-scroll isn't
+  // cancelled by the layout shift.
+  const goToFinalCta = (fromMobileMenu = false) => {
+    if (fromMobileMenu) {
+      setOpen(false);
+      setTimeout(() => {
+        document
+          .getElementById("final-cta")
+          ?.scrollIntoView({ behavior: "smooth" });
+      }, 320);
+    } else {
+      document
+        .getElementById("final-cta")
+        ?.scrollIntoView({ behavior: "smooth" });
+    }
   };
 
   return (
@@ -99,7 +112,7 @@ export function Navbar() {
               variant="accent"
               className="hidden sm:inline-flex"
               size="sm"
-              onClick={goToRegistration}
+              onClick={() => goToFinalCta(false)}
             >
               {t.nav.join}
             </CTAButton>
@@ -147,10 +160,7 @@ export function Navbar() {
                   <CTAButton
                     variant="accent"
                     className="w-full"
-                    onClick={() => {
-                      setOpen(false);
-                      goToRegistration();
-                    }}
+                    onClick={() => goToFinalCta(true)}
                   >
                     {t.nav.join}
                   </CTAButton>

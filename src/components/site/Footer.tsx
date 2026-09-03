@@ -1,7 +1,7 @@
 "use client";
 
 import { useLanguage } from "@/lib/i18n/LanguageProvider";
-import { ArrowUpRight, Instagram } from "lucide-react";
+import { ArrowUpRight, Instagram, Mail, UserCircle2 } from "lucide-react";
 
 const NAV_LINKS = [
   { key: "whatIs", href: "#what-is" },
@@ -12,6 +12,9 @@ const NAV_LINKS = [
 
 const REGISTRATION_URL = "https://www.spaceappschallenge.org/2026/local-events/salta/";
 const INSTAGRAM_URL = "https://www.instagram.com/spaceapps.salta/";
+const CONTACT_EMAIL = "ariellamas.tech@gmail.com";
+const LOCAL_LEAD = "Ariel Lamas";
+const POWERED_BY = "powered by ariellamas.tech";
 
 export function Footer() {
   const { t } = useLanguage();
@@ -115,7 +118,7 @@ export function Footer() {
             <h3 className="font-mono-code text-xs uppercase tracking-[0.25em] text-blue-yonder mb-3">
               {t.footer.connect}
             </h3>
-            <div className="flex items-center gap-3">
+            <div className="flex flex-wrap items-center gap-2.5">
               <a
                 href={INSTAGRAM_URL}
                 target="_blank"
@@ -128,6 +131,29 @@ export function Footer() {
                   @spaceapps.salta
                 </span>
               </a>
+              <a
+                href={`mailto:${CONTACT_EMAIL}`}
+                aria-label={`Email ${CONTACT_EMAIL}`}
+                className="inline-flex items-center gap-2 rounded-md border border-white/15 bg-white/5 hover:bg-white/10 hover:border-blue-yonder/40 px-3 py-2 text-sm text-foreground/85 transition-colors"
+              >
+                <Mail className="w-4 h-4 text-blue-yonder" />
+                <span className="font-mono-code text-xs tracking-wider">
+                  {CONTACT_EMAIL}
+                </span>
+              </a>
+            </div>
+
+            {/* Local Lead */}
+            <div className="mt-5 flex items-center gap-3 rounded-md border border-white/10 bg-white/3 px-3 py-2.5">
+              <UserCircle2 className="w-5 h-5 text-blue-yonder shrink-0" />
+              <div className="min-w-0">
+                <div className="font-mono-code text-[10px] uppercase tracking-[0.25em] text-blue-yonder/80">
+                  Local Lead
+                </div>
+                <div className="font-display font-bold text-sm text-foreground truncate">
+                  {LOCAL_LEAD}
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -146,10 +172,11 @@ export function Footer() {
             </p>
           </div>
           <p className="text-xs text-muted-foreground/70 font-mono-code tracking-wider">
-            {t.footer.madeBy}
+            {POWERED_BY}
           </p>
         </div>
       </div>
     </footer>
   );
 }
+
