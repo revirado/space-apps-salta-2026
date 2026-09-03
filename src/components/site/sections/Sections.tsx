@@ -25,9 +25,11 @@ import {
   Target,
   CheckCircle2,
   Circle,
-  Mail,
+  Instagram,
   ArrowRight,
 } from "lucide-react";
+
+const REGISTRATION_URL = "https://www.spaceappschallenge.org/2026/local-events/salta/";
 
 /* ================================================================== */
 /* 01 — What is Space Apps                                            */
@@ -589,10 +591,14 @@ export function Collaborators() {
             <CTAButton
               variant="outline"
               onClick={() => {
-                window.location.href = "mailto:hello@spaceapps-salta.dev";
+                window.open(
+                  "https://www.instagram.com/spaceapps.salta/",
+                  "_blank",
+                  "noopener,noreferrer",
+                );
               }}
             >
-              <Mail className="w-4 h-4 mr-2 inline" />
+              <Instagram className="w-4 h-4 mr-2 inline" />
               {t.collaborators.cta}
             </CTAButton>
           </div>
@@ -683,9 +689,9 @@ export function FinalCTA() {
       />
       <div
         aria-hidden
-        className="absolute inset-0 -z-10 flex items-center justify-center"
+        className="absolute inset-0 -z-10 flex items-center justify-center pointer-events-none overflow-hidden"
       >
-        {[260, 360, 460].map((size, i) => (
+        {[220, 300, 380].map((size, i) => (
           <div
             key={i}
             className="absolute rounded-full border border-blue-yonder/20 orbit-pulse"
@@ -730,12 +736,27 @@ export function FinalCTA() {
           transition={{ duration: 0.7, ease: "easeOut", delay: 0.18 }}
           className="mt-8 flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center"
         >
-          <CTAButton variant="accent" glow>
+          <CTAButton
+            variant="accent"
+            glow
+            onClick={() =>
+              window.open(REGISTRATION_URL, "_blank", "noopener,noreferrer")
+            }
+          >
             {t.finalCta.primary}
             <ArrowRight className="w-4 h-4 ml-2 inline" />
           </CTAButton>
-          <CTAButton variant="outline">
-            <Mail className="w-4 h-4 mr-2 inline" />
+          <CTAButton
+            variant="outline"
+            onClick={() =>
+              window.open(
+                "https://www.instagram.com/spaceapps.salta/",
+                "_blank",
+                "noopener,noreferrer",
+              )
+            }
+          >
+            <Instagram className="w-4 h-4 mr-2 inline" />
             {t.finalCta.secondary}
           </CTAButton>
         </motion.div>

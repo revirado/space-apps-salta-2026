@@ -245,14 +245,14 @@ const es: Dictionary = {
     title: "Una red local que hace posible el evento",
     lead: "Estamos construyendo una red local de organizaciones, empresas e instituciones que harán posible NASA Space Apps Salta 2026. Los logos se irán incorporando a medida que se confirmen.",
     status: "Sumate como colaborador",
-    cta: "Quiero colaborar",
+    cta: "Escribinos por Instagram",
   },
   finalCta: {
     eyebrow: "10 — SUMATE",
     title: "¿Listos para construir algo que importe?",
     text: "Dos días, datos reales, una comunidad global y un desafío que te espera. Sumate a NASA Space Apps Salta 2026.",
     primary: "Sumate al desafío",
-    secondary: "Escribinos",
+    secondary: "Inscribite aquí",
   },
   footer: {
     event: "NASA Space Apps Salta 2026",
@@ -399,14 +399,14 @@ const en: Dictionary = {
     title: "A local network that makes the event possible",
     lead: "We are building a local network of organizations, companies and institutions that will make NASA Space Apps Salta 2026 possible. Logos will be added as they are confirmed.",
     status: "Join as a collaborator",
-    cta: "I want to collaborate",
+    cta: "Message us on Instagram",
   },
   finalCta: {
     eyebrow: "10 — JOIN",
     title: "Ready to build something that matters?",
     text: "Two days, real data, a global community and a challenge waiting for you. Join NASA Space Apps Salta 2026.",
     primary: "Join the challenge",
-    secondary: "Contact us",
+    secondary: "Register here",
   },
   footer: {
     event: "NASA Space Apps Salta 2026",

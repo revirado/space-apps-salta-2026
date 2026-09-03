@@ -71,3 +71,55 @@ Stage Summary:
   - Código: `src/app/layout.tsx`, `src/app/page.tsx`, `src/app/globals.css`, `src/lib/i18n/dictionary.ts`, `src/lib/i18n/LanguageProvider.tsx`, `src/components/three/OrbitalField.tsx`, `src/components/ui-custom/CTAButton.tsx`, `src/components/ui-custom/SectionHeader.tsx`, `src/components/ui-custom/Reveal.tsx`, `src/components/site/Navbar.tsx`, `src/components/site/Hero.tsx`, `src/components/site/sections/Sections.tsx`, `src/components/site/Footer.tsx`, `next.config.ts`.
   - Assets: `public/logos/*` (6 logos oficiales).
   - Screenshots: `download/preview-desktop-hero.png`, `download/preview-desktop-full.png`, `download/preview-mobile-hero.png`, `download/preview-mobile-full.png`.
+
+---
+Task ID: 2
+Agent: main (super-z)
+Task: Cambios para deploy en Vercel + fixes de UI mobile + cambios generales de contenido (Hero 2026, switcher spacing, logos oficiales en footer, links de inscripción e Instagram).
+
+Work Log:
+- Desinstalado `prisma` y `@prisma/client` con `bun remove`. Borrados `src/lib/db.ts`, `prisma/schema.prisma`, carpeta `prisma/`, carpeta `db/`, y `.env`. El proyecto ya no tiene dependencias de base de datos.
+- `package.json`: scripts `db:push`, `db:generate`, `db:migrate`, `db:reset` eliminados. `build` simplificado a `next build` (sin cp a standalone). `start` cambiado a `next start`.
+- `next.config.ts`: removido `output: "standalone"`. Mantenido `typescript.ignoreBuildErrors`, `reactStrictMode: false`, `allowedDevOrigins` para preview sandbox.
+- `src/components/site/Navbar.tsx`:
+  - Header ahora SIEMPRE tiene fondo blureado (en top: `bg-deep-blue/55 backdrop-blur-sm`, scrolled: `bg-deep-blue/85 backdrop-blur-md`). El menú mobile desplegable hereda el fondo del header — ya no es transparente en top.
+  - Animación de apertura/cierre del menú mobile con `framer-motion AnimatePresence` (height: 0→auto, opacity 0→1, ease material standard, 280ms). Ya no aparece/desaparece bruscamente.
+  - CTA "Sumate" del navbar ahora abre `https://www.spaceappschallenge.org/2026/local-events/salta/` en nueva pestaña.
+  - Cierre automático del menú al pasar a desktop (resize listener).
+  - `LanguageSwitcher`: `Globe` icon ahora tiene `mr-1` (margin-right) además del `ml-2.5` para no chocar con el botón ES.
+- `src/app/globals.css`:
+  - `html, body` con `overflow-x: clip` y `max-width: 100vw` para prevenir horizontal scroll global.
+  - Removido `scroll-behavior: smooth` (afectaba al reduced-motion; ahora cada anchor usa `scrollIntoView({behavior:'smooth'})` programáticamente).
+- `src/app/page.tsx`: wrapper raíz con `overflow-x-clip` (defense in depth).
+- `src/components/site/sections/Sections.tsx`:
+  - FinalCTA: órbitas decorativas reducidas de 260/360/460 a 220/300/380 + contenedor con `overflow-hidden` y `pointer-events-none` para evitar overflow en mobile.
+  - FinalCTA: CTA primario ahora abre `REGISTRATION_URL` en nueva pestaña. CTA secundario (antes "Escribinos" con `Mail`) reemplazado por "Inscribite aquí" / "Register here" con `Instagram` icon y link a `https://www.instagram.com/spaceapps.salta/`.
+  - Collaborators: CTA "Quiero colaborar" → "Escribinos por Instagram" / "Message us on Instagram" con link a Instagram (antes era `mailto:`).
+- `src/components/site/Hero.tsx`: CTA primario "Sumate al desafío" ahora abre `REGISTRATION_URL` en nueva pestaña (antes hacía scroll a #final-cta).
+- `src/lib/i18n/dictionary.ts`:
+  - ES y EN: `hero.title` cambiado a `NASA SPACE APPS\nSALTA 2026`.
+  - ES: `finalCta.secondary` cambiado de "Escribinos" a "Inscribite aquí". `collaborators.cta` cambiado de "Quiero colaborar" a "Escribinos por Instagram".
+  - EN: `finalCta.secondary` cambiado de "Contact us" a "Register here". `collaborators.cta` cambiado de "I want to collaborate" a "Message us on Instagram".
+- `src/components/site/Footer.tsx`:
+  - Bloque de marca ahora usa el logo horizontal oficial `space-apps-color-white.svg` (con texto NASA + Space Apps) en lugar del small white.
+  - Sección "Connect" nueva con link a `@spaceapps.salta` en Instagram (con icono `Instagram` de Lucide y chip estilizado).
+  - Bottom strip incluye el logo circular `space-apps-motif.svg` como sello visual junto al copyright.
+  - Link "NASA Space Apps Challenge" ahora apunta al URL de inscripción local Salta 2026 en lugar del site global.
+
+Stage Summary:
+- ESLint: 0 errores, 0 warnings.
+- Dev server: corriendo, 0 errores de runtime tras fix del import `Instagram`.
+- Agent Browser verification:
+  - Hero title confirmado: "NASA SPACE APPS SALTA 2026" (ES) / "NASA SPACE APPS SALTA 2026" (EN).
+  - Header en top: `backgroundColor` con 55% opacidad + `backdrop-filter: blur(8px)` — menú mobile con fondo blureado (VLM confirmó: "dark, solid (or heavily blurred) background that obscures the main content").
+  - Mobile menu animación: height 0→281px + opacity 0→1, transición 280ms ease material.
+  - Horizontal overflow: 0px en todos los anchos probados (320, 360, 375, 390, 414, 768, 800, 1024, 1280, 1440, 1920). overflowX = false en todos.
+  - Links externos verificados:
+    - `https://www.spaceappschallenge.org/2026/local-events/salta/` (CTA Hero, Navbar, FinalCTA, footer "NASA Space Apps Challenge")
+    - `https://www.instagram.com/spaceapps.salta/` (footer Instagram chip, FinalCTA secondary, Collaborators CTA)
+  - VLM footer: confirmó logo horizontal oficial visible + motif circular en bottom strip + Instagram link visible con handle.
+  - VLM hero: confirmó navbar con fondo sólido azul oscuro (no transparente), spacing correcto entre globe icon y botón ES.
+- Artefactos producidos:
+  - Modificaciones: `package.json`, `next.config.ts`, `src/app/globals.css`, `src/app/page.tsx`, `src/lib/i18n/dictionary.ts`, `src/components/site/Navbar.tsx`, `src/components/site/Hero.tsx`, `src/components/site/Footer.tsx`, `src/components/site/sections/Sections.tsx`.
+  - Archivos borrados: `src/lib/db.ts`, `prisma/schema.prisma`, `.env` (carpetas `prisma/` y `db/` eliminadas).
+  - Screenshots nuevos: `download/preview-mobile-menu-open.png`, `download/preview-mobile-hero-v2.png`, `download/preview-desktop-hero-v2.png`, `preview-footer-v2.png`, `preview-footer-v3.png`, `preview-hero-v3.png`.

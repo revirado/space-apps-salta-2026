@@ -5,6 +5,7 @@ import { useLanguage } from "@/lib/i18n/LanguageProvider";
 import { CTAButton } from "@/components/ui-custom/CTAButton";
 import { cn } from "@/lib/utils";
 import { Menu, X, Globe } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 
 const NAV_LINKS = [
   { key: "whatIs", href: "#what-is" },
@@ -12,6 +13,8 @@ const NAV_LINKS = [
   { key: "event", href: "#event" },
   { key: "faq", href: "#faq" },
 ] as const;
+
+const REGISTRATION_URL = "https://www.spaceappschallenge.org/2026/local-events/salta/";
 
 export function Navbar() {
   const { t, language, setLanguage, labels, languages } = useLanguage();
@@ -25,13 +28,27 @@ export function Navbar() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  // Close mobile menu on resize to desktop
+  useEffect(() => {
+    const onResize = () => {
+      if (window.innerWidth >= 1024) setOpen(false);
+    };
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
+
+  const goToRegistration = () => {
+    window.open(REGISTRATION_URL, "_blank", "noopener,noreferrer");
+  };
+
   return (
     <header
       className={cn(
-        "fixed top-0 inset-x-0 z-50 transition-all duration-300",
+        "fixed top-0 inset-x-0 z-50 transition-colors duration-300",
+        // Always blurred/solid so the mobile menu is readable even at top.
         scrolled
-          ? "bg-deep-blue/80 backdrop-blur-md border-b border-white/10"
-          : "bg-transparent",
+          ? "bg-deep-blue/85 backdrop-blur-md border-b border-white/10"
+          : "bg-deep-blue/55 backdrop-blur-sm border-b border-white/5",
       )}
     >
       <nav
@@ -82,10 +99,7 @@ export function Navbar() {
               variant="accent"
               className="hidden sm:inline-flex"
               size="sm"
-              onClick={() => {
-                const el = document.getElementById("final-cta");
-                el?.scrollIntoView({ behavior: "smooth" });
-              }}
+              onClick={goToRegistration}
             >
               {t.nav.join}
             </CTAButton>
@@ -102,41 +116,49 @@ export function Navbar() {
           </div>
         </div>
 
-        {/* Mobile menu */}
-        {open && (
-          <div
-            id="mobile-menu"
-            className="lg:hidden pb-4 pt-2 border-t border-white/10 mt-1"
-          >
-            <ul className="flex flex-col gap-1">
-              {NAV_LINKS.map((link) => (
-                <li key={link.key}>
-                  <a
-                    href={link.href}
-                    onClick={() => setOpen(false)}
-                    className="block px-3 py-3 rounded-md text-base font-medium text-foreground/85 hover:bg-white/5"
+        {/* Mobile menu — animated */}
+        <AnimatePresence>
+          {open && (
+            <motion.div
+              id="mobile-menu"
+              key="mobile-menu"
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{
+                height: { duration: 0.28, ease: [0.4, 0, 0.2, 1] },
+                opacity: { duration: 0.18, ease: "easeOut" },
+              }}
+              className="lg:hidden overflow-hidden"
+            >
+              <ul className="flex flex-col gap-1 pt-2 pb-4 border-t border-white/10 mt-1">
+                {NAV_LINKS.map((link) => (
+                  <li key={link.key}>
+                    <a
+                      href={link.href}
+                      onClick={() => setOpen(false)}
+                      className="block px-3 py-3 rounded-md text-base font-medium text-foreground/85 hover:bg-white/5 transition-colors"
+                    >
+                      {t.nav[link.key]}
+                    </a>
+                  </li>
+                ))}
+                <li className="pt-2">
+                  <CTAButton
+                    variant="accent"
+                    className="w-full"
+                    onClick={() => {
+                      setOpen(false);
+                      goToRegistration();
+                    }}
                   >
-                    {t.nav[link.key]}
-                  </a>
+                    {t.nav.join}
+                  </CTAButton>
                 </li>
-              ))}
-              <li className="pt-2">
-                <CTAButton
-                  variant="accent"
-                  className="w-full"
-                  onClick={() => {
-                    setOpen(false);
-                    document
-                      .getElementById("final-cta")
-                      ?.scrollIntoView({ behavior: "smooth" });
-                  }}
-                >
-                  {t.nav.join}
-                </CTAButton>
-              </li>
-            </ul>
-          </div>
-        )}
+              </ul>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </nav>
     </header>
   );
@@ -159,7 +181,10 @@ function LanguageSwitcher({
       aria-label="Language switcher"
       className="inline-flex items-center rounded-md border border-white/15 bg-white/5 overflow-hidden"
     >
-      <Globe className="w-3.5 h-3.5 ml-2.5 text-blue-yonder/80" aria-hidden />
+      <Globe
+        className="w-3.5 h-3.5 ml-2.5 mr-1 text-blue-yonder/80"
+        aria-hidden
+      />
       {languages.map((lng) => (
         <button
           key={lng}

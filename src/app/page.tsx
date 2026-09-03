@@ -17,7 +17,7 @@ import {
 
 export default function Home() {
   return (
-    <div className="min-h-screen flex flex-col bg-deep-blue text-foreground">
+    <div className="min-h-screen flex flex-col bg-deep-blue text-foreground overflow-x-clip">
       <Navbar />
       <main className="flex-1">
         <Hero />

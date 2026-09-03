@@ -6,6 +6,8 @@ import { CTAButton } from "@/components/ui-custom/CTAButton";
 import { motion } from "framer-motion";
 import { ArrowDown } from "lucide-react";
 
+const REGISTRATION_URL = "https://www.spaceappschallenge.org/2026/local-events/salta/";
+
 export function Hero() {
   const { t } = useLanguage();
 
@@ -99,9 +101,7 @@ export function Hero() {
               variant="primary"
               glow
               onClick={() =>
-                document
-                  .getElementById("final-cta")
-                  ?.scrollIntoView({ behavior: "smooth" })
+                window.open(REGISTRATION_URL, "_blank", "noopener,noreferrer")
               }
             >
               {t.hero.cta}
