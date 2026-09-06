@@ -171,9 +171,14 @@ export function Footer() {
               © {new Date().getFullYear()} NASA Space Apps Salta · {t.footer.rights}
             </p>
           </div>
-          <p className="text-xs text-muted-foreground/70 font-mono-code tracking-wider">
+          <a
+            href="https://www.ariellamas.tech/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-xs text-muted-foreground/70 font-mono-code tracking-wider hover:text-foreground transition-colors"
+          >
             {POWERED_BY}
-          </p>
+          </a>
         </div>
       </div>
     </footer>
